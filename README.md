@@ -10,6 +10,19 @@
 ### A shell script that reads a log file and answers the following questions:
 - Which IP addresses makes the most number of connection attempts?
 - Which IP addresses makes the most number of successful connectionattempts?
-- What are the most common result codes and where do they come from(IP number)?
-- What are the most common result codes that indicate failure (no auth,not found etc) 
+- What are the most common result codes and where do they come from (IP number)?
+- What are the most common result codes that indicate failure (no auth, not found etc) 
 - Where do they come from?•Which IP number get the most bytes sent to them?
+
+## Arguments
+
+### The arguments to the shell script should be coded as such:
+### log_sum.sh [-n N] (-c|-2|-r|-F|-t) <filename>
+- -n: Limit the number of results to N
+- -c: Which IP address makes the most number of connection attempts?
+- -2: Which address makes the most number of successful attempts?
+- -r: What are the most common results codes and where do they comefrom?
+- -F: What are the most common result codes that indicate failure (noauth, not found etc) and where do they come from?
+- -t: Which IP number get the most bytes sent to them?
+  
+### Everything is sorted in the decreasing order
