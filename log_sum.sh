@@ -39,7 +39,7 @@ ip="`echo "$su_ip" | sort | uniq -c | sort -n -r`"
 
 #now the ip address and their successful attempts  are printed
 ip="`echo "$ip" | awk '{print "-2:  " $2"  "$1 " "}'`"
-echo "$ip" | head -n $l
+echo "$ip" | head -n $1
 
 }
 
