@@ -10,7 +10,7 @@ l=0
 log_c()
 {
 
-#Variable ipc contains all the data from the thttpd.log.
+#Variable ip_d contains all the data from the thttpd.log.
 ip_d=$(<$1)
 
 #it is converted into expression and grep is used for pattern matching.
@@ -28,7 +28,7 @@ echo "$ip" | head -n $2
 
 log_2()
 {
-#Variable ipc contains all the data from the thttpd.log.
+#Variable ip_d contains all the data from the thttpd.log.
 ip_d=$(<$1)
 
 #it is converted into expression and grep is used for pattern matching and finds number of successful connections.
