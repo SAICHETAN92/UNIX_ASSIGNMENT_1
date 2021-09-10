@@ -52,4 +52,26 @@ echo "$ip" | head -n $2
 }
 
 ```
-### In the code given above data from the log file thttpd.log is taken by ip_d. Then the data is converted into expression foe easy comparision. GREP (Globally Search a Regular Expression and Print) is used to search set of strings from the data and match them (Pattern Matching). An IP address basicaly contains four set of numbers separated by a '.' and each set varies from one digit to three digits. Example of an IP address is "213.64.214.124". Then Uniq comand is used to count number of connections but it is mandatory to sort it before we apply uniq to get accurate results, then as per requirement the data must be sorted in decreasing order, so it is sorted in a reverse order. An finally the required columns are printed as statements using awk.
+### In the code given above data from the log file thttpd.log is taken by ip_d. Then the data is converted into expression foe easy comparision. GREP (Globally Search a Regular Expression and Print) is used to search set of strings from the data and match them (Pattern Matching). An IP address basicaly contains four set of numbers separated by a '.' and each set varies from one digit to three digits. The line `[[:digit:]]{1,3}` conatins a set of one digit number to a three digit numbers Example of an IP address is "213.64.214.124". Then Uniq comand is used to count number of connections but it is mandatory to sort it before we apply uniq to get accurate results, then as per requirement the data must be sorted in decreasing order, so it is sorted in a reverse order. And finally the required columns are printed as statements using awk.
+
+### Every IP address makes a connection attempt but we cannot assure that every connection attempt made is a successful attempt. The next log is log_2 and it is used to find the IP adress that makes the most number of successful connection attempts. The program is given below:
+```
+log_2()
+{
+#Variable ip_d contains all the data from the thttpd.log.
+ip_d=$(<$1)
+
+#it is converted into expression and grep is used for pattern matching and finds number of successful connections.
+su_ip=$(echo "$ip_d" | grep "HTTP\/[1]\.[0-1]\" [2][0-9][0-9]" | grep -Eo '[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}')
+
+#uniq is used to count the occurances of ip address and sorted them in descending order. 
+ip="`echo "$su_ip" | sort | uniq -c | sort -n -r`"
+
+#now the ip address and their successful attempts  are printed
+ip="`echo "$ip" | awk '{print "-2:  " $2"  "$1 " "}'`"
+echo "$ip" | head -n $1
+
+}
+
+```
+### In the code given above data from the log file thttpd.log is taken by ip_d. Then the data is converted into expression foe easy comparision. GREP (Globally Search a Regular Expression and Print) is used to search set of strings from the data and match them (Pattern Matching). To find if an IP address made a successful attempt, status codes are used. The status code is a three digit code to show the information regarding the connection. A status code of foarmat "2XX" is said to have made a scuccessful atempt. So, the status codes starting with 2 need to be searched. But there might be other three digit numbers starting with 2. So, it is searched with a statement HTTP followed by version followed by the status code (eg. HTTP/1.1 200) to get the accurate results. Then Uniq command is used to count and it is sorted in decreasing order. Finally the required columns are printed as statements using awk.
