@@ -26,3 +26,7 @@
 - -t: Which IP number get the most bytes sent to them?
   
 ### Everything is sorted in the decreasing order
+  
+## Explanation of the Shell Script.
+  
+### The shell used is BASH (Bourne Again Shell) Shell. The first line `#!/bin/bash` indicates the location of the BASH.
