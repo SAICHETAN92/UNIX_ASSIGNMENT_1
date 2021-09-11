@@ -102,21 +102,64 @@ st_cod="`echo "$status_code" | sort| uniq -c| sort -nr | awk '{print $2}'`"
 	done		        
 }
 
+log_t()
+{
+
+#Variable IP_Data contains all the data from the thttpd.log.
+IP_Data=$(<$1)
+
+#it captures the ip address along with the number of bytes tranmitted
+store_IPByte=$(echo "$IP_Data" | awk '{print $1,$10}'| sort -k1,1)
+#echo "$store_IPByte"
+
+#it removes all failed connections
+store_IPByte="`echo "$store_IPByte" |awk '{print $1,$2}'|grep -v "-"`"
+#echo "$store_IPByte"
+
+#it sort every ip address in decresing order
+store_IP=$(echo "$store_IPByte" |awk '{print $1}'| sort | uniq |sort -nr| awk '{print $1}')
+#echo "$store_IP"
+
+	declare -A Lst_IP
+	#for loop is used to add up all the byte transmitations under similar ip address.
+	for IP in ${store_IP[@]};
+	do
+		sum=0
+		byte=$(echo "$store_IPByte"|grep "$IP"|awk '{print $2}' )
+	
+		for val in ${byte[@]};
+		do
+			sum=$(expr $sum + $val)
+		done
+		Lst_IP[$IP]=$sum 
+	done	
+	
+                # this for loop is used to print the ip address along with the number of byte transmissions.   
+		for IP in ${!Lst_IP[@]}; 
+		do
+			echo -e "-t:$IP   ${Lst_IP[$IP]} where ${Lst_IP[$IP]} is the number of bytes sent from the server"
+		done | sort -k2 -r -n | head -n $l	
+	 
+
+}
+
+
 maxl=2
 
 
 if [ $1 = "-n" ] 
-then
+then	
 	l=$2
 	shift 2
 fi
 
 if [ $# -gt $maxl ]
 then
-	echo "Max number of arguemnts is reached"
+	echo "Maximum number of arguemnts is reached"
 else
 	case $1 in
 		-c)
+			
 			log_c $2 $l
 			;;
 		-2)
@@ -128,8 +171,12 @@ else
 		-F)
 			log_F $2
 			;;
+		-t)
+			log_t $2
+			;;
+
 		-?)
-			echo "Please give a command"
+			echo "U should give me a command"
 			;;
 	esac
 fi	
