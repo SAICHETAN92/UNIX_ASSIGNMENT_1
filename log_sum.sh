@@ -71,6 +71,37 @@ st_cod=$(echo "$st_cod"| grep "[2-4][0][0-4]" | grep -Eo "[2-4][0][0-4]")
 
 }
 
+log_F()
+{
+
+#Variable ip_d contains all the data from the thttpd.log.
+ip_d=$(<$1)
+
+#matching the status code with connection
+st_cod=$(echo "$ipc"|grep  "HTTP\/[1]\.[0-1]\" [4][0][0-4]")
+
+#storing the values of status code 
+st_cod=$(echo "$status_code" | awk '{print $9}')
+
+#sorting the staus codes
+st_cod="`echo "$status_code" | sort| uniq -c| sort -nr | awk '{print $2}'`"
+
+#for loop is used to print the status code under the specific status code
+	for code in $status_code;
+	do
+                #printing status code
+		echo $code
+               
+	       #match all the ip addresses with specific status code
+		s_ip=$(echo "$ipc" | grep "HTTP\/[1]\.[0-1]\" $code" | awk '{print $1,$9}')
+               
+	       #match all the ip addresses with specific status code
+		result=$(echo "$s_ip"| sort|uniq -c | sort -n -r| awk '{print "-r : "$3"  " $2 " "}')
+		echo "$result" | head -n $l
+		
+	done		        
+}
+
 maxl=2
 
 
