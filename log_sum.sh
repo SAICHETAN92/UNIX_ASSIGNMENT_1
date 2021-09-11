@@ -125,6 +125,9 @@ else
 		-r)
 			log_r $2
 			;;
+		-F)
+			log_F $2
+			;;
 		-?)
 			echo "Please give a command"
 			;;
