@@ -75,3 +75,38 @@ echo "$ip" | head -n $1
 
 ```
 ### In the code given above data from the log file thttpd.log is taken by ip_d. Then the data is converted into expression foe easy comparision. GREP (Globally Search a Regular Expression and Print) is used to search set of strings from the data and match them (Pattern Matching). To find if an IP address made a successful attempt, status codes are used. The status code is a three digit code to show the information regarding the connection. A status code of format "2XX" is said to have made a scuccessful atempt. So, the status codes starting with 2 need to be searched. But there might be other three digit numbers starting with 2. So, it is searched with a statement HTTP followed by version followed by the status code (eg. HTTP/1.1 200) to get the accurate results. Then Uniq command is used to count and it is sorted in decreasing order. Finally the required columns are printed as statements using awk.
+  
+### There are several status code, one indicates "page not found", other indicates "unauthorised atempt" etc. Almost every connection attempts returns a status code. The next log is log_r and it is used to find the most common status codes and where do they come from? The program is given below:
+```
+log_r()
+{
+#Variable ip_d contains all the data from the thttpd.log.
+ip_d=$(<$1)
+
+#Argument 9 indicates status code, ip address are sorted as per status code
+st_cod="`echo "$ip_d"| awk '{print $9}' | sort |uniq -c| sort -n -r`"
+
+# status codes are matched using grep command
+st_cod=$(echo "$st_cod"| grep "[2-4][0][0-4]" | grep -Eo "[2-4][0][0-4]")
+
+#for loop is used to print all ip addresses under specific status code
+  for code in $st_cod;
+	do
+        #printing status code
+		    echo $code
+                
+		    #match all the ip addresses with specific status code
+		    s_ip=$(echo "$ipc" | grep "HTTP\/[1]\.[0-1]\" $code" | awk '{print $1,$9}')
+                
+		    #match all the ip addresses with specific status code
+	      result="`echo "$s_ip"| sort | uniq -c | sort -nr |awk '{print "-r : "$3"  "$2 " "}'`"
+        echo "$result" | head -n $l 
+		
+	done
+
+}
+
+```
+### In the code given above data from the log file thttpd.log is taken by ip_d. Then the data is converted into expression foe easy comparision. GREP (Globally Search a Regular Expression and Print) is used to search set of strings from the data and match them (Pattern Matching). In the log file Ninteh column consists of the status codes, so initially they are sorted. Generally status codes are 20X, 30X, 40X, so among all the the numbers only these numbers are considered `[2-4][0][0-4]` and searched using GREP command. After that a for loop is used to identify all the IP addresses under the specified status codes. Inside the for loop GREP is used for pattern matching and searching for ststus codes. But there might be other three digit numbers in the format 20X, 30X, 40X. So, it is searched with a statement HTTP followed by version followed by the status code (eg. HTTP/1.1 200) to get the accurate results. Then Uniq command is used to count and it is sorted in decreasing order. Finally the required columns are printed as statements using awk.
+
+### 
