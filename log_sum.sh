@@ -43,6 +43,34 @@ echo "$ip" | head -n $1
 
 }
 
+log_r()
+{
+#Variable ip_d contains all the data from the thttpd.log.
+ip_d=$(<$1)
+
+#Argument 9 indicates status code, ip address are sorted as per status code
+st_cod="`echo "$ip_d"| awk '{print $9}' | sort |uniq -c| sort -n -r`"
+
+# status codes are matched using grep command
+st_cod=$(echo "$st_cod"| grep "[2-4][0][0-4]" | grep -Eo "[2-4][0][0-4]")
+
+#for loop is used to print all ip addresses under specific status code
+      	for code in $st_cod;
+	do
+                #printing status code
+		echo $code
+                
+		#match all the ip addresses with specific status code
+		s_ip=$(echo "$ipc" | grep "HTTP\/[1]\.[0-1]\" $code" | awk '{print $1,$9}')
+                
+		#match all the ip addresses with specific status code
+	        result="`echo "$s_ip"| sort | uniq -c | sort -nr |awk '{print "-r : "$3"  "$2 " "}'`"
+                echo "$result" | head -n $l 
+		
+	done
+
+}
+
 maxl=2
 
 
@@ -62,6 +90,9 @@ else
 			;;
 		-2)
 			log_2 $2
+			;;
+		-r)
+			log_r $2
 			;;
 		-?)
 			echo "Please give a command"
