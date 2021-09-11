@@ -58,6 +58,7 @@ echo "$ip" | head -n $2
 ```
 log_2()
 {
+	    
 #Variable ip_d contains all the data from the thttpd.log.
 ip_d=$(<$1)
 
@@ -80,13 +81,14 @@ echo "$ip" | head -n $1
 ```
 log_r()
 {
+	
 #Variable ip_d contains all the data from the thttpd.log.
 ip_d=$(<$1)
 
 #Argument 9 indicates status code, ip address are sorted as per status code
 st_cod="`echo "$ip_d"| awk '{print $9}' | sort |uniq -c| sort -n -r`"
 
-# status codes are matched using grep command
+#status codes are matched using grep command
 st_cod=$(echo "$st_cod"| grep "[2-4][0][0-4]" | grep -Eo "[2-4][0][0-4]")
 
 #for loop is used to print all ip addresses under specific status code
@@ -107,6 +109,6 @@ st_cod=$(echo "$st_cod"| grep "[2-4][0][0-4]" | grep -Eo "[2-4][0][0-4]")
 }
 
 ```
-### In the code given above data from the log file thttpd.log is taken by ip_d. Then the data is converted into expression foe easy comparision. GREP (Globally Search a Regular Expression and Print) is used to search set of strings from the data and match them (Pattern Matching). In the log file Ninteh column consists of the status codes, so initially they are sorted. Generally status codes are 20X, 30X, 40X, so among all the the numbers only these numbers are considered `[2-4][0][0-4]` and searched using GREP command. After that a for loop is used to identify all the IP addresses under the specified status codes. Inside the for loop GREP is used for pattern matching and searching for ststus codes. But there might be other three digit numbers in the format 20X, 30X, 40X. So, it is searched with a statement HTTP followed by version followed by the status code (eg. HTTP/1.1 200) to get the accurate results. Then Uniq command is used to count and it is sorted in decreasing order. Finally the required columns are printed as statements using awk.
+### In the code given above data from the log file thttpd.log is taken by ip_d. Then the data is converted into expression foe easy comparision. GREP (Globally Search a Regular Expression and Print) is used to search set of strings from the data and match them (Pattern Matching). In the log file Ninteh column consists of the status codes, so initially they are sorted. Generally status codes are 20X, 30X, 40X, so among all the the numbers only these numbers are considered `grep "[2-4][0][0-4]"` and searched using GREP command. After that a for loop is used to identify all the IP addresses under the specified status codes. Inside the for loop GREP is used for pattern matching and searching for ststus codes. But there might be other three digit numbers in the format 20X, 30X, 40X. So, it is searched with a statement HTTP followed by version followed by the status code (eg. HTTP/1.1 200) to get the accurate results. Then Uniq command is used to count and it is sorted in decreasing order. Finally the required columns are printed as statements using awk.
 
 ### 
