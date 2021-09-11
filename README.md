@@ -92,15 +92,15 @@ st_cod=$(echo "$st_cod"| grep "[2-4][0][0-4]" | grep -Eo "[2-4][0][0-4]")
 #for loop is used to print all ip addresses under specific status code
   for code in $st_cod;
 	do
-        #printing status code
+      		    #printing status code
 		    echo $code
                 
 		    #match all the ip addresses with specific status code
 		    s_ip=$(echo "$ipc" | grep "HTTP\/[1]\.[0-1]\" $code" | awk '{print $1,$9}')
                 
 		    #match all the ip addresses with specific status code
-	      result="`echo "$s_ip"| sort | uniq -c | sort -nr |awk '{print "-r : "$3"  "$2 " "}'`"
-        echo "$result" | head -n $l 
+	            result="`echo "$s_ip"| sort | uniq -c | sort -nr |awk '{print "-r : "$3"  "$2 " "}'`"
+      		    echo "$result" | head -n $l 
 		
 	done
 
